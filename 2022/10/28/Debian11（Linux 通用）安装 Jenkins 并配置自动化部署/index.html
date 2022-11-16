@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Debian11（Linux 通用）安装 Jenkins 并配置自动化部署 | 泡泡的博客</title><meta name="author" content="徐一杰"><meta name="copyright" content="徐一杰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="前言 Jenkins是基于Java开发的一种持续集成工具，用于监控持续重复的工作，可用于自动化各种任务，如构建，测试和部署软件。Jenkins可以通过 apt 和 yum 安装、Docker安装，也可以下载 war 包允许在拥有 JDK 环境的任何机器   一、安装 Jenkins注意，安装 Jenkins 需要 JDK 环境，如果没有安装，可以直接 apt install default-jdk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Debian11（Linux 通用）安装 Jenkins 并配置自动化部署">
+<meta property="og:url" content="https://bubblingxuyijie.github.io/2022/10/28/Debian11%EF%BC%88Linux%20%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Jenkins%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="泡泡的博客">
+<meta property="og:description" content="前言 Jenkins是基于Java开发的一种持续集成工具，用于监控持续重复的工作，可用于自动化各种任务，如构建，测试和部署软件。Jenkins可以通过 apt 和 yum 安装、Docker安装，也可以下载 war 包允许在拥有 JDK 环境的任何机器   一、安装 Jenkins注意，安装 Jenkins 需要 JDK 环境，如果没有安装，可以直接 apt install default-jdk">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c2b2f110b7dc4f06a816afe49b3d9622.png">
+<meta property="article:published_time" content="2022-10-28T10:15:19.000Z">
+<meta property="article:modified_time" content="2022-11-16T10:16:21.032Z">
+<meta property="article:author" content="徐一杰">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Debian">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Deepin">
+<meta property="article:tag" content="Jenkins">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="自动化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/c2b2f110b7dc4f06a816afe49b3d9622.png"><link rel="shortcut icon" href="/img/android-chrome-192x192.png"><link rel="canonical" href="https://bubblingxuyijie.github.io/2022/10/28/Debian11%EF%BC%88Linux%20%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Jenkins%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Debian11（Linux 通用）安装 Jenkins 并配置自动化部署',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-16 18:16:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/182382641051648891248098.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img-blog.csdnimg.cn/c2b2f110b7dc4f06a816afe49b3d9622.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">泡泡的博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Debian11（Linux 通用）安装 Jenkins 并配置自动化部署</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-28T10:15:19.000Z" title="发表于 2022-10-28 18:15:19">2022-10-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-16T10:16:21.032Z" title="更新于 2022-11-16 18:16:21">2022-11-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Debian11（Linux 通用）安装 Jenkins 并配置自动化部署"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2022/10/28/Debian11%EF%BC%88Linux%20%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Jenkins%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2022/10/28/Debian11%EF%BC%88Linux%20%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Jenkins%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>Jenkins是基于Java开发的一种持续集成工具，用于监控持续重复的工作，可用于自动化各种任务，如构建，测试和部署软件。Jenkins可以通过 apt 和 yum 安装、Docker安装，也可以下载 war 包允许在拥有 JDK 环境的任何机器</p>
+</blockquote>
+<hr>
+<h1 id="一、安装-Jenkins"><a href="#一、安装-Jenkins" class="headerlink" title="一、安装 Jenkins"></a>一、安装 Jenkins</h1><p><code>注意，安装 Jenkins 需要 JDK 环境，如果没有安装，可以直接 apt install default-jdk 或者 yum install java 这样安装</code></p>
+<p><code>注意，配置自动化部署需要 maven 环境，如果没有安装，可以直接 apt install maven 或者 yum install maven 这样安装</code></p>
+<p><code>注意，配置自动化部署需要 git 环境，如果没有安装，可以直接 apt install git 或者 yum install git 这样安装，这个 git 的版本不重要，也可以不安装，Jenkins安装好以后让Jenkins自动安装</code></p>
+<h2 id="apt-x2F-yum安装（推荐）"><a href="#apt-x2F-yum安装（推荐）" class="headerlink" title="apt&#x2F;yum安装（推荐）"></a>apt&#x2F;yum安装（推荐）</h2><blockquote>
+<p>这是 apt 的安装方式</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载Jenkins公钥</span></span><br><span class="line">curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo <span class="built_in">tee</span> \</span><br><span class="line">    /usr/share/keyrings/jenkins-keyring.asc &gt; /dev/null</span><br><span class="line"><span class="comment"># 把Jenkins安装包添加到apt仓库</span></span><br><span class="line"><span class="built_in">echo</span> deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \</span><br><span class="line">    https://pkg.jenkins.io/debian binary/ | sudo <span class="built_in">tee</span> \</span><br><span class="line">    /etc/apt/sources.list.d/jenkins.list &gt; /dev/null</span><br><span class="line"><span class="comment"># 更新仓库</span></span><br><span class="line">apt update</span><br><span class="line">apt install jenkins</span><br><span class="line"><span class="comment"># 查看Jenkins运行状态</span></span><br><span class="line">systemctl status jenkins.service</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这是 yum 的安装方式</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载Jenkins仓库</span></span><br><span class="line">sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo</span><br><span class="line"><span class="comment"># 安装ca-certificates并导入公钥</span></span><br><span class="line">yum -y install ca-certificates</span><br><span class="line">sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key</span><br><span class="line">yum -y install jenkins</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkinsci/blueocean</span><br><span class="line">docker run \</span><br><span class="line">  -u root \</span><br><span class="line">  -d \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  -p 50000:50000 \</span><br><span class="line">  -v jenkins-data:/var/jenkins_home \</span><br><span class="line">  -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">  jenkinsci/blueocean</span><br></pre></td></tr></table></figure>
+
+<h2 id="War包安装"><a href="#War包安装" class="headerlink" title="War包安装"></a>War包安装</h2><p><a target="_blank" rel="noopener" href="http://mirrors.jenkins.io/war-stable/latest/jenkins.war">点击下载Jenkins的war包</a></p>
+<p>直接java -jar 启动就可以</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时启动</span></span><br><span class="line">java -jar jenkins.war</span><br><span class="line"><span class="comment"># 启动并保持后台运行</span></span><br><span class="line"><span class="built_in">nohup</span> java -jar jenkins.war &amp;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="二、配置文件位置"><a href="#二、配置文件位置" class="headerlink" title="二、配置文件位置"></a>二、配置文件位置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /lib/systemd/system/jenkins.service</span><br></pre></td></tr></table></figure>
+
+<p>可以修改一些常用配置，只是示例，这里不用改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">User=jenkins</span><br><span class="line">Group=jenkins</span><br><span class="line">Environment=<span class="string">&quot;JENKINS_HOME=/opt/jenkins&quot;</span></span><br><span class="line">WorkingDirectory=/opt/jenkins</span><br><span class="line">Environment=<span class="string">&quot;JENKINS_PORT=8080&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="三、登录Jenkins控制面板"><a href="#三、登录Jenkins控制面板" class="headerlink" title="三、登录Jenkins控制面板"></a>三、登录Jenkins控制面板</h1><blockquote>
+<p>开放防火墙 8080 端口</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Debian/Ubuntu ufw</span></span><br><span class="line">ufw allow 8080</span><br><span class="line">ufw reload</span><br><span class="line"><span class="comment"># Debian/Ubuntu iptables（这个叼毛防火墙好麻烦，我没用过，不知道是不是这样）</span></span><br><span class="line">iptables -A INPUT -p tcp --dport 8080 -j ACCEPT</span><br><span class="line">iptables-restore</span><br><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>浏览器访问服务器IP:8080</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/1f872289ab2e43228b05ae3758c6d572.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>可以看到首次进入需要解锁，它说密码已经写入到我们的安装服务器，路径是 <code>/var/lib/jenkins/secrets/initialAdminPassword</code>，我们 <code>cat</code> 一下这个路径，得到密码，粘贴到网页，点击继续</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/cf75372bf02442d6bc07ebfe67ad74c6.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>我们选择安装推荐的插件就行</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/d0d94d95b92d4ad58a523e2a02c5f614.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>正在安装，等待安装完成</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/d59b1a7edea646988f8cb95099058c74.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>创建用户</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/ff0579645bbe4832b8a35bc1616d4939.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>就是控制面板的地址，保存继续就OK了！！！</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/29856b25e1eb484e8e2e289703acf39c.png" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="四、配置自动化部署"><a href="#四、配置自动化部署" class="headerlink" title="四、配置自动化部署"></a>四、配置自动化部署</h1><blockquote>
+<p>我将给 Jenkins 配置 JDK环境、Maven环境、Git地址、项目运行服务器IP来实现对项目的监控、自动部署</p>
+</blockquote>
+<h2 id="1、配置环境"><a href="#1、配置环境" class="headerlink" title="1、配置环境"></a>1、配置环境</h2><blockquote>
+<p>查看 java_home：1、如果你是通过解压压缩包安装的，直接<code>echo $JAVA_HOME</code>。2、如果是通过 apt 和 yum 安装的，<code>update-alternatives --config java</code>查看，<code>/usr/lib/jvm/java-17-openjdk-amd64</code>就是 java_home 的位置<br>查看 Maven_home：mvn -v</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">root@debian:/usr/lib/jvm/java-1.17.0-openjdk-amd64<span class="comment"># echo $JAVA_HOME</span></span><br><span class="line"></span><br><span class="line">root@debian:/usr/lib/jvm/java-1.17.0-openjdk-amd64<span class="comment"># update-alternatives --config java</span></span><br><span class="line">链接组 java (提供 /usr/bin/java)中只有一个候选项：/usr/lib/jvm/java-17-openjdk-amd64/bin/java</span><br><span class="line">无需配置。</span><br><span class="line">root@debian:/usr/lib/jvm/java-1.17.0-openjdk-amd64<span class="comment"># mvn -v</span></span><br><span class="line">Apache Maven 3.6.3</span><br><span class="line">Maven home: /usr/share/maven</span><br><span class="line">Java version: 17.0.4, vendor: Debian, runtime: /usr/lib/jvm/java-17-openjdk-amd64</span><br><span class="line">Default locale: zh_CN, platform encoding: UTF-8</span><br><span class="line">OS name: <span class="string">&quot;linux&quot;</span>, version: <span class="string">&quot;5.10.0-18-amd64&quot;</span>, <span class="built_in">arch</span>: <span class="string">&quot;amd64&quot;</span>, family: <span class="string">&quot;unix&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>获取完成，开始配置，把 Install automatically 钩打掉就能配置本地环境了</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/9be62dc5ed9243bdae52a23f55bd0531.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/db7e4865e0be4b55a1d6c2b29e7d46c1.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/533ba375c1c949c398daf7b146042fb4.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/15de9dfa01fc4555a78d495d7f915c1a.png" alt="在这里插入图片描述"></p>
+<hr>
+<h2 id="2、配置自动化部署"><a href="#2、配置自动化部署" class="headerlink" title="2、配置自动化部署"></a>2、配置自动化部署</h2><blockquote>
+<p>配置好环境保存，新建Item</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/b09e02aa0085498a94973d1c02c63478.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>名字随便，然后选择<code>Freestyle project</code></p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/ea9e6344b87a49fd86408629836794ef.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>勾选为 Github项目，输入仓库地址</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/3d16ef9047a34a299a2cc76dca26904a.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>配置项目的 Git 仓库连接，<code>Credentials</code>自己添加一个，填 github 的登录账号密码</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/cb11f579c1174ebbbb457dadf0749ca7.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>构建触发器身份令牌随便填<br>如下图：当前项目的回调地址为：<code>http://localhost:8080/me/my-views/view/all/job/test/build?token=test</code><br>只要执行这个地址（在浏览器上访问改地址），该项目就会发起一次构建项目，即拉取代码打包部署操作</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/6657740438e44aceaa6205609f013404.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>配置构建命令：打包，cd 到 jar 包位置，启动，别问 BUILD_ID 是什么意思，我也不知道，就是这样写的</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/27da6ea21d104ac5aff5ebe683f876ac.png" alt="在这里插入图片描述"></p>
+<h2 id="远程部署（可选）"><a href="#远程部署（可选）" class="headerlink" title="远程部署（可选）"></a>远程部署（可选）</h2><blockquote>
+<p>如果想打包到其他服务器启动，要安装新插件</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/aeb4f6aa6d9c482ea09fa6a2b32fc283.png" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/bc91da9a186248fc8ff284fb925d1744.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>页面左边还有一个 Download program，点进去，拉到最下面，打勾“完成后重启”<br>如果没有，可以手动重启 <code>systemctl restart jenkins</code></p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/c2b2f110b7dc4f06a816afe49b3d9622.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>配置 <code>Send build over SSH</code> 因为我这里只有一台服务器，没有配置 ssh，我网上找了一张老图</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/8a2f665abb0c47deb94b9cf0d8a7ce87.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>在GitHub服务器上的指定项目里面配置上文中提到的回调地址</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/5001ad0c003b482e89b9c3ade0fe5a53.png" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><blockquote>
+<p>配置好以后，直接向配置的 Git 仓库分支推送代码，Jenkins会自动开始构建，这里可以看到构建历史</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/4b3ef98df783499eac9c49cdb20b0dac.png" alt="在这里插入图片描述"></p>
+<p>除了 Jenkins，还有一款免费的叫 JPom，也很不错，推荐一下，有兴趣的可以研究一下</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://bubblingxuyijie.github.io">徐一杰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bubblingxuyijie.github.io/2022/10/28/Debian11%EF%BC%88Linux%20%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Jenkins%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/">https://bubblingxuyijie.github.io/2022/10/28/Debian11（Linux 通用）安装 Jenkins 并配置自动化部署/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bubblingxuyijie.github.io" target="_blank">泡泡的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/Debian/">Debian</a><a class="post-meta__tags" href="/tags/Ubuntu/">Ubuntu</a><a class="post-meta__tags" href="/tags/Deepin/">Deepin</a><a class="post-meta__tags" href="/tags/Jenkins/">Jenkins</a><a class="post-meta__tags" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a></div><div class="post_share"><div class="social-share" data-image="https://img-blog.csdnimg.cn/c2b2f110b7dc4f06a816afe49b3d9622.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/MyWeChatPay.png" target="_blank"><img class="post-qr-code-img" src="/img/MyWeChatPay.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/MyAliPay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/MyAliPay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/11/01/Debian%EF%BC%88Linux%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Kafka%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/"><img class="prev-cover" src="/img/Kafka.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Debian（Linux通用）安装 Kafka 并配置远程访问</div></div></a></div><div class="next-post pull-right"><a href="/2022/10/28/SpringSecurity%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8%EF%BC%88%E5%90%AB%E6%96%B0%20API%20%E6%9B%BF%E6%8D%A2%E8%BF%87%E6%97%B6%E7%9A%84%20WebSecurityConfigurerAdapter%EF%BC%89/"><img class="next-cover" src="/img/springbootLogo.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringSecurity 配置与使用（含新 API 替换过时的 WebSecurityConfigurerAdapter）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/09/Debian(Linux)%20%E5%AE%89%E8%A3%85Windows%E9%80%9A%E7%94%A8%E5%AD%97%E4%BD%93(%E5%8F%AF%E8%A7%A3%E5%86%B3TimesNewRoman%E7%AD%89%E5%AD%97%E4%BD%93%E7%9A%84%E6%8A%A5%E9%94%99)/" title="Debian(Linux) 安装Windows通用字体(可解决TimesNewRoman等字体的报错)"><img class="cover" src="/img/LinuxLogo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-09</div><div class="title">Debian(Linux) 安装Windows通用字体(可解决TimesNewRoman等字体的报错)</div></div></a></div><div><a href="/2021/04/08/Deepin%EF%BC%88Ubuntu%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85Hadoop%E4%BC%AA%E5%88%86%E5%B8%83%E7%8E%AF%E5%A2%83%EF%BC%88%E9%9B%86%E6%88%90Hbase%E3%80%81Hive%E3%80%81MySQL%E3%80%81Spark%E3%80%81Scala%EF%BC%89/" title="Deepin（Ubuntu通用）安装Hadoop伪分布环境（集成Hbase、Hive、MySQL、Spark、Scala）"><img class="cover" src="https://img-blog.csdnimg.cn/20210429175805886.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ4OTIyNDU5,size_16,color_FFFFFF,t_70" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-08</div><div class="title">Deepin（Ubuntu通用）安装Hadoop伪分布环境（集成Hbase、Hive、MySQL、Spark、Scala）</div></div></a></div><div><a href="/2022/11/01/Debian%EF%BC%88Linux%E9%80%9A%E7%94%A8%EF%BC%89%E5%AE%89%E8%A3%85%20Kafka%20%E5%B9%B6%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE/" title="Debian（Linux通用）安装 Kafka 并配置远程访问"><img class="cover" src="/img/Kafka.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-01</div><div class="title">Debian（Linux通用）安装 Kafka 并配置远程访问</div></div></a></div><div><a href="/2022/04/10/AWS%20Airport%20%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97/" title="AWS Airport 搭建日志"><img class="cover" src="/img/shadowsocksLogo.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-10</div><div class="title">AWS Airport 搭建日志</div></div></a></div><div><a href="/2022/01/06/CentOS%20%E4%BF%AE%E5%A4%8D%20yum/" title="CentOS 修复 yum"><img class="cover" src="/img/LinuxLogo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-06</div><div class="title">CentOS 修复 yum</div></div></a></div><div><a href="/2022/09/29/Linux%20%E4%BD%BF%E7%94%A8%20apt%20%E5%AE%89%E8%A3%85%20zookeeper/" title="Linux 使用 apt 安装 zookeeper"><img class="cover" src="/img/zookeeper.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-29</div><div class="title">Linux 使用 apt 安装 zookeeper</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/182382641051648891248098.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">徐一杰</div><div class="author-info__description">编程技术、代码资源、各类技术、各种工具、影视资源分享</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">87</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/BubblingXuYijie"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.csdn.net/qq_48922459" target="_blank" title="CSDN"><i class="fa-solid fa-blog"></i></a><a class="social-icon" href="mailto:1119461672@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://t.me/xuyijie" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1119461672&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fa-brands fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博文和本人的CSDN同步，有问题可以点击右下角齿轮和我聊天或者评论文章哦。（Blogs is synchronized with my CSDN.If you have any questions, you can click the lower right gear to chat with me or comment on the article.）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85-Jenkins"><span class="toc-number">2.</span> <span class="toc-text">一、安装 Jenkins</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#apt-x2F-yum%E5%AE%89%E8%A3%85%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">apt&#x2F;yum安装（推荐）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker%E5%AE%89%E8%A3%85"><span class="toc-number">2.2.</span> <span class="toc-text">Docker安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#War%E5%8C%85%E5%AE%89%E8%A3%85"><span class="toc-number">2.3.</span> <span class="toc-text">War包安装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">二、配置文件位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%99%BB%E5%BD%95Jenkins%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF"><span class="toc-number">4.</span> <span class="toc-text">三、登录Jenkins控制面板</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="toc-number">5.</span> <span class="toc-text">四、配置自动化部署</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83"><span class="toc-number">5.1.</span> <span class="toc-text">1、配置环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E9%85%8D%E7%BD%AE%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2"><span class="toc-number">5.2.</span> <span class="toc-text">2、配置自动化部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E9%83%A8%E7%BD%B2%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">远程部署（可选）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By 徐一杰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">很开心你能访问我的网站ヾ(^▽^*)))</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'hkhwUbLes3CPVXrOaA5GWlEC-9Nh9j0Va',
+      appKey: 'yjP1tNi7HQcdN3abvEzimV0Y',
+      avatar: 'monsterid',
+      serverURLs: 'https://leancloud.xuyijie.icu',
+      emojiMaps: {"tv_doge":"6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png","tv_亲亲":"a8111ad55953ef5e3be3327ef94eb4a39d535d06.png","tv_偷笑":"bb690d4107620f1c15cff29509db529a73aee261.png","tv_再见":"180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png","tv_冷漠":"b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png","tv_发怒":"34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png","tv_发财":"34db290afd2963723c6eb3c4560667db7253a21a.png","tv_可爱":"9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png","tv_吐血":"09dd16a7aa59b77baa1155d47484409624470c77.png","tv_呆":"fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png","tv_呕吐":"9f996894a39e282ccf5e66856af49483f81870f3.png","tv_困":"241ee304e44c0af029adceb294399391e4737ef2.png","tv_坏笑":"1f0b87f731a671079842116e0991c91c2c88645a.png","tv_大佬":"093c1e2c490161aca397afc45573c877cdead616.png","tv_大哭":"23269aeb35f99daee28dda129676f6e9ea87934f.png","tv_委屈":"d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png","tv_害羞":"a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png","tv_尴尬":"7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png","tv_微笑":"70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png","tv_思考":"90cf159733e558137ed20aa04d09964436f618a1.png","tv_惊吓":"0d15c7e2ee58e935adc6a7193ee042388adc22af.png"},
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/9rfawxoiu99lc40ynelt5vvxgkhickux.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
