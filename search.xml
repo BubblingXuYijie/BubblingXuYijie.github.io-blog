@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>Springboot使用logback配置彩色日志</title>
+      <link href="/2024/04/18/Springboot%E4%BD%BF%E7%94%A8logback%E9%85%8D%E7%BD%AE%E5%BD%A9%E8%89%B2%E6%97%A5%E5%BF%97/"/>
+      <url>/2024/04/18/Springboot%E4%BD%BF%E7%94%A8logback%E9%85%8D%E7%BD%AE%E5%BD%A9%E8%89%B2%E6%97%A5%E5%BF%97/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote><p>应该有很多同学发现，使用了<code>logback</code>以后，我们的控制台日志都变成灰色了，网络上搜到的logback配置大多数没有进行配色，所以会把springboot的默认配色方案给覆盖掉</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E9%BB%91%E7%99%BD%E6%97%A5%E5%BF%97.png" alt="在这里插入图片描述"></p><hr><h1 id="一、logback文件"><a href="#一、logback文件" class="headerlink" title="一、logback文件"></a>一、logback文件</h1><blockquote><p>重点对比<code>&lt;property name=&quot;nocolor.log.pattern&quot;&gt;</code>和<code>&lt;property name=&quot;log.pattern&gt;&quot;</code>这两行，我们用类似<code>%blue()</code>这种颜色把日志内容包裹起来，就可以了</p></blockquote><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span> <span class="attr">scan</span>=<span class="string">&quot;true&quot;</span> <span class="attr">scanPeriod</span>=<span class="string">&quot;60 seconds&quot;</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!-- 无配色 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;nocolor.log.pattern&quot;</span> <span class="attr">value</span>=<span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125; %-5level [%thread] %logger&#123;36&#125; - [%M:%L] - %msg%n&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 有配色 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;log.pattern&quot;</span> <span class="attr">value</span>=<span class="string">&quot;%blue(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;) %highlight(%-5level) %magenta([%thread]) %cyan(%logger&#123;36&#125; - [%M:%L]) - %msg%n&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 控制台输出 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">&quot;console&quot;</span> <span class="attr">class</span>=<span class="string">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>$&#123;log.pattern&#125;<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">&quot;info&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">&quot;console&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure><hr><h1 id="二、效果"><a href="#二、效果" class="headerlink" title="二、效果"></a>二、效果</h1><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%BD%A9%E8%89%B2%E6%97%A5%E5%BF%97.png" alt="在这里插入图片描述"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> logback </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows安装配置Rust（附CLion配置与运行）</title>
+      <link href="/2024/04/18/Windows%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AERust%EF%BC%88%E9%99%84CLion%E9%85%8D%E7%BD%AE%E4%B8%8E%E8%BF%90%E8%A1%8C%EF%BC%89/"/>
+      <url>/2024/04/18/Windows%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AERust%EF%BC%88%E9%99%84CLion%E9%85%8D%E7%BD%AE%E4%B8%8E%E8%BF%90%E8%A1%8C%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote><p>本文以 windows 安装为例，配置编译器为 minGW，使用 clion运行，可以不用下载 vs 和众多依赖</p></blockquote><hr><h1 id="一、下载"><a href="#一、下载" class="headerlink" title="一、下载"></a>一、下载</h1><blockquote><p>点击进入 <a href="https://www.rust-lang.org/zh-CN/tools/install">rust官方网站</a> 进行下载，我们选择64位的下载</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/Rust%E4%B8%8B%E8%BD%BD%E7%95%8C%E9%9D%A2.png" alt="在这里插入图片描述"></p><hr><h1 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h1><blockquote><p>如果你想<code>修改rust的安装位置</code>(默认C盘)，下载完成后先<code>不要</code>打开，我们要先配置环境变量，<code>CARGO_HOME</code>，值是你想安装的位置</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/Cargo%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png" alt="在这里插入图片描述"></p><blockquote><p>右键以管理员身份运行，会出现下面的弹窗，我们选 3，回车，这样可以<code>免安装visual studio</code>这种重量级软件</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo1.png" alt="在这里插入图片描述"></p><blockquote><p>接下来是这样，安装位置就是你刚才配置的环境变量位置</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo2.png" alt="在这里插入图片描述"></p><blockquote><p>如果你已经安装 MSVC ，那么安装过程会非常的简单，输入 1 并回车，直接进入第二步，但是相信大多数同学都没有安装，一是要下载vs，很麻烦，二是使用<code>minGW</code>可以跨平台，所以我们<code>选择 2</code> ，回车，再输入<code>x86_64-pc-windows-gnu</code>，回车</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo3.png" alt="在这里插入图片描述"></p><blockquote><p>然后会提示我们选择工具版本，我们输入<code>stable</code>回车，然后是 which tolls and data to install 提示安装内容，默认就是  default ，<code>直接回车</code>就行，然后输入<code>Y</code>回车</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo4.png" alt="在这里插入图片描述"></p><blockquote><p>发现又回到了刚打开时的解面，这时候，我们的 default host trip 就变成了我们刚才设置的<code>gnu</code>，也就是minGW，输入<code>1</code>,回车，等待下载完成</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo5.png" alt="在这里插入图片描述"><br><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E5%AE%89%E8%A3%85Cargo6.png" alt="在这里插入图片描述"></p><blockquote><p>可以查看rust版本，出现版本号妥妥的安装成功</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E9%AA%8C%E8%AF%81Cargo.png" alt="在这里插入图片描述"></p><hr><h1 id="三、配置标准库！！！"><a href="#三、配置标准库！！！" class="headerlink" title="三、配置标准库！！！"></a>三、配置标准库！！！</h1><blockquote><p>&#x3D;&#x3D;还有一步很重要的，我发现大部分教程都没写&#x3D;&#x3D;，执行以下下面的命令，否则 rustup 标准库缺失，导致程序无法运行：<code>rustup component add rust-src</code></p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E9%85%8D%E7%BD%AErustup1.png" alt="在这里插入图片描述"></p><blockquote><p>配置环境变量，<code>RUSTUP_HOME</code></p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E9%85%8D%E7%BD%AErustup2.png" alt="在这里插入图片描述"></p><hr><h1 id="四、使用-CLion-运行-rust"><a href="#四、使用-CLion-运行-rust" class="headerlink" title="四、使用 CLion 运行 rust"></a>四、使用 CLion 运行 rust</h1><h2 id="1、新建rust项目"><a href="#1、新建rust项目" class="headerlink" title="1、新建rust项目"></a>1、新建rust项目</h2><blockquote><p>new project 选择 rust 项目，第一次新建会提示你下载 rust 插件，下载完成后新建界面就长这样，location是项目位置，下面的都是clion自动识别的，如果你没有执行上面安装rustup component add rust-src这个命令，这里就会识别不出来</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E6%96%B0%E5%BB%BArust%E9%A1%B9%E7%9B%AE1.png" alt="在这里插入图片描述"></p><h2 id="2、配置运行环境"><a href="#2、配置运行环境" class="headerlink" title="2、配置运行环境"></a>2、配置运行环境</h2><blockquote><p>create，新建完成，首次使用 clion，他会提示你创建运行环境，我们添加一个 <code>MinGW</code>就可以了，clion里面内置的就有，无需自己出去下载</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E6%96%B0%E5%BB%BArust%E9%A1%B9%E7%9B%AE2.png" alt="在这里插入图片描述"></p><blockquote><p>如果没有弹出这个弹窗，你也没有配置<code>MinGW</code>，没关系，你去<code>setting的build下面的Toolchains</code>也可以打开这个界面的</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E6%96%B0%E5%BB%BArust%E9%A1%B9%E7%9B%AE3.png" alt="在这里插入图片描述"></p><h2 id="3、运行"><a href="#3、运行" class="headerlink" title="3、运行"></a>3、运行</h2><blockquote><p>配置好编译器后，等待项目构建完成，项目初始结构就长这样</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E7%BC%96%E5%86%99rust1.png" alt="在这里插入图片描述"></p><blockquote><p>运行一下，完美</p></blockquote><p><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/%E7%BC%96%E5%86%99rust2.png" alt="在这里插入图片描述"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Rust </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> logback </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Springboot使用MDC进行日志追踪</title>
       <link href="/2023/02/13/Springboot%E4%BD%BF%E7%94%A8MDC%E8%BF%9B%E8%A1%8C%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA/"/>
       <url>/2023/02/13/Springboot%E4%BD%BF%E7%94%A8MDC%E8%BF%9B%E8%A1%8C%E6%97%A5%E5%BF%97%E8%BF%BD%E8%B8%AA/</url>
@@ -960,7 +1014,7 @@
       
       <categories>
           
-          <category> Python </category>
+          <category> Nginx </category>
           
       </categories>
       
