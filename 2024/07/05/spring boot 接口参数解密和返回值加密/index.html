@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>spring boot 接口参数解密和返回值加密 | 泡泡的博客</title><meta name="author" content="徐一杰"><meta name="copyright" content="徐一杰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="开发背景  虽然使用 HTTPS 已经可以基本保证传输数据的安全性，但是很多国企、医疗、股票项目等仍然要求对接口数据进行自行加密，作者最近就遇到了，是支付宝对接国家医保的接口时，医保接口要求进行接口加密。  所以鉴于这个需求的存在，作者也找过现在的一些接口加密组件，发现都是3.4年前就已经停止更新了，并且不接受 pr 也不回复 issue 了，用起来也是功能简陋配置复杂，所以就开发了一套全新的组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring boot 接口参数解密和返回值加密">
+<meta property="og:url" content="https://bubblingxuyijie.github.io/2024/07/05/spring%20boot%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86/index.html">
+<meta property="og:site_name" content="泡泡的博客">
+<meta property="og:description" content="开发背景  虽然使用 HTTPS 已经可以基本保证传输数据的安全性，但是很多国企、医疗、股票项目等仍然要求对接口数据进行自行加密，作者最近就遇到了，是支付宝对接国家医保的接口时，医保接口要求进行接口加密。  所以鉴于这个需求的存在，作者也找过现在的一些接口加密组件，发现都是3.4年前就已经停止更新了，并且不接受 pr 也不回复 issue 了，用起来也是功能简陋配置复杂，所以就开发了一套全新的组件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/logo/logo.png">
+<meta property="article:published_time" content="2024-07-05T08:22:48.000Z">
+<meta property="article:modified_time" content="2024-07-05T09:01:26.336Z">
+<meta property="article:author" content="徐一杰">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="数据加密">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/logo/logo.png"><link rel="shortcut icon" href="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/android-chrome-192x192.png"><link rel="canonical" href="https://bubblingxuyijie.github.io/2024/07/05/spring%20boot%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-center"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'spring boot 接口参数解密和返回值加密',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-07-05 17:01:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/182382641051648891248098.jpeg" onerror="onerror=null;src='https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">71</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">89</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具大全</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://xuyijie.icu/"><span> 泡泡的Infinity</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://undersea.xuyijie.icu/"><span> 海里手机软件</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fireworks.xuyijie.icu/"><span> 给你看烟花</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://cloud.xuyijie.icu/"><span> 泡泡云</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://doc.xuyijie.icu/secure-api-doc/"><span> SecureApi</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://i.loli.net/2019/12/20/xb2DR3qmGutphHO.jpg"><span> 色图</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://qiniuoss.xuyijie.icu/SecureApiDoc/img/logo/logo.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">泡泡的博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 工具大全</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://xuyijie.icu/"><span> 泡泡的Infinity</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://undersea.xuyijie.icu/"><span> 海里手机软件</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://fireworks.xuyijie.icu/"><span> 给你看烟花</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://cloud.xuyijie.icu/"><span> 泡泡云</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://doc.xuyijie.icu/secure-api-doc/"><span> SecureApi</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://i.loli.net/2019/12/20/xb2DR3qmGutphHO.jpg"><span> 色图</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">spring boot 接口参数解密和返回值加密</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-05T08:22:48.000Z" title="发表于 2024-07-05 16:22:48">2024-07-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-07-05T09:01:26.336Z" title="更新于 2024-07-05 17:01:26">2024-07-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="spring boot 接口参数解密和返回值加密"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2024/07/05/spring%20boot%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2024/07/05/spring%20boot%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86/" itemprop="commentCount"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="开发背景"><a href="#开发背景" class="headerlink" title="开发背景"></a>开发背景</h1><blockquote>
+<ul>
+<li><p>虽然使用 HTTPS 已经可以基本保证传输数据的安全性，但是很多国企、医疗、股票项目等仍然要求对接口数据进行自行加密，作者最近就遇到了，是支付宝对接国家医保的接口时，医保接口要求进行接口加密。</p>
+</li>
+<li><p>所以鉴于这个需求的存在，作者也找过现在的一些接口加密组件，发现都是3.4年前就已经停止更新了，并且不接受 pr 也不回复 issue 了，用起来也是功能简陋配置复杂，所以就开发了一套全新的组件。</p>
+</li>
+<li><p>作者对接口加密的各种需求了解的并不是很多，如果在使用中有功能缺失，欢迎来 <a target="_blank" rel="noopener" href="https://github.com/BubblingXuYijie/secure-api-spring-boot">Github</a> 提 issue 或者 pr ❤️。</p>
+</li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><blockquote>
+<ul>
+<li><p>SecureApi一款接口参数和返回值加解密工具，高性能、轻量化，无任何外部依赖；</p>
+</li>
+<li><p>spring boot场景启动器设计（支持spring boot2和3），完全自动化，支持param、body参数（暂不支持path参数），用户无需关心加密解密和密钥匹配过程；</p>
+</li>
+<li><p>配置灵活，配置文件支持yml和bean方式，支持注解、url正则进行接口匹配，支持AES、SM4、RSA等多种加密方式，支持DM前后端密钥协商方式。</p>
+</li>
+</ul>
+</blockquote>
+<p><code>用户增量趋势</code></p>
+<p>此组件发布已经一两年了，发现有那么多用户，才重新整理了命名、仓库和文档</p>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E7%BB%84%E4%BB%B6maven%E4%B8%8B%E8%BD%BD%E9%87%8F.jpg" alt="组件maven下载量.jpg"></p>
+<p>&#x3D;&#x3D;本篇只是先体验功能，使用请看官方文档：&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://doc.xuyijie.icu/secure-api-doc/">https://doc.xuyijie.icu/secure-api-doc/</a></p>
+<p>&#x3D;&#x3D;Github地址：&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://github.com/BubblingXuYijie/secure-api-spring-boot">https://github.com/BubblingXuYijie/secure-api-spring-boot</a></p>
+<p>&#x3D;&#x3D;Gitee地址(非主要，issue还是集中在Github比较好，大家都可以看到)&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://gitee.com/BubblingXuYijie/secure-api-spring-boot">https://gitee.com/BubblingXuYijie/secure-api-spring-boot</a></p>
+<p>一些问题你们会在<code>文档</code>中或者Github的<code>issue</code>里找到答案，如果你不知道前端如何配合，那么<code>文档里有你想要的东西</code></p>
+<hr>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><blockquote>
+<p>环境要求：</p>
+<ul>
+<li>jdk8+（spring boot 3 请使用 jdk17+）</li>
+<li>Maven&#x2F;Gradle</li>
+<li>spring boot 2+（spring boot 3 请引入 SecureApi 的 3.0.0+ 版本）</li>
+</ul>
+</blockquote>
+<p><code>Maven</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/icu.xuyijie/secure-api-spring-boot-starter --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>icu.xuyijie<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>secure-api-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--spring boot 3 请引入 3.0.2 版本--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Gradle</code></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// spring boot 3 请引入 3.0.2 版本</span></span><br><span class="line">implementation <span class="string">&#x27;icu.xuyijie:secure-api-spring-boot-starter:2.0.9&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><blockquote>
+<p>有两种配置方法， <code>yml</code> 和 <code>Bean</code> 方式，看你喜欢哪一个，如果是对安全性要求较高，建议使用 <code>Bean</code> 方式动态设置密钥，而不是写在 <code>yml</code> 里。</p>
+</blockquote>
+<h2 id="yml-方式"><a href="#yml-方式" class="headerlink" title="yml 方式"></a>yml 方式</h2><blockquote>
+<p>下面是 yml 的完整配置，有些配置项是可选的，在注解中均已解释</p>
+</blockquote>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">secure-api:</span></span><br><span class="line">  <span class="comment"># 开启SecureApi功能，如果为false则其余配置项均不生效</span></span><br><span class="line">  <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 生成的key和密文等是否是符合url规范的</span></span><br><span class="line">  <span class="attr">url-safe:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 开启加解密日志打印，会打印出接口名、加密模式、算法、明文和密文等信息</span></span><br><span class="line">  <span class="attr">show-log:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># 加密模式，common和session_key可选，session_key是会话密钥模式，用于每次请求都使用不同的密钥，需要前端配合</span></span><br><span class="line">  <span class="attr">mode:</span> <span class="string">common</span></span><br><span class="line">  <span class="comment"># 加密算法</span></span><br><span class="line">  <span class="attr">cipher-algorithm:</span> <span class="string">rsa_ecb_sha256</span></span><br><span class="line">  <span class="comment"># session_key模式配置项，与前端协商的会话密钥类型，common模式下此配置不生效</span></span><br><span class="line">  <span class="attr">session-key-cipher-algorithm:</span> <span class="string">aes_ecb_pkcs5</span></span><br><span class="line">  <span class="comment"># 对称算法用于加解密的密钥，cipher-algorithm选择对称加密算法时配置，也可为空，组件会随机生成一个</span></span><br><span class="line">  <span class="attr">key:</span></span><br><span class="line">  <span class="comment"># 对称算法用于加解密的偏移量，cipher-algorithm选择对称加密算法时配置，也可为空，组件会随机生成一个</span></span><br><span class="line">  <span class="attr">iv:</span></span><br><span class="line">  <span class="comment"># 非对称算法用于加密的公钥，cipher-algorithm选择非对称加密算法时配置，也可为空，组件会随机生成一对</span></span><br><span class="line">  <span class="attr">public-key:</span></span><br><span class="line">  <span class="comment"># 非对称算法用于解密的私钥，cipher-algorithm选择非对称加密算法时配置，也可为空，组件会随机生成一对</span></span><br><span class="line">  <span class="attr">private-key:</span></span><br><span class="line">  <span class="comment"># 需要加密的接口路径匹配，遵循spring boot拦截器的正则规则，留空或者不配置代表不使用url匹配，只对注解的接口进行解密</span></span><br><span class="line">  <span class="attr">encrypt-url:</span></span><br><span class="line">    <span class="comment"># 配置了此项，接口有无注解都将进行返回值加密</span></span><br><span class="line">    <span class="attr">include-urls:</span> <span class="string">/**</span></span><br><span class="line">    <span class="comment"># 即使配置了排除，注解的优先级也高于此项</span></span><br><span class="line">    <span class="attr">exclude-urls:</span></span><br><span class="line">  <span class="comment"># 需要解密的接口路径匹配，遵循spring boot拦截器的正则规则，留空或者不配置代表不使用url匹配，只对注解的接口、参数、字段进行解密</span></span><br><span class="line">  <span class="attr">decrypt-url:</span></span><br><span class="line">    <span class="comment"># 配置了此项，接口、参数、字段有无注解都将进行解密</span></span><br><span class="line">    <span class="attr">include-urls:</span> <span class="string">/**</span></span><br><span class="line">    <span class="comment"># 即使配置了排除，注解的优先级也高于此项</span></span><br><span class="line">    <span class="attr">exclude-urls:</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Bean-方式"><a href="#Bean-方式" class="headerlink" title="Bean 方式"></a>Bean 方式</h2><blockquote>
+<p>注意，一旦使用了 <code>Bean</code> 方式来配置，<code>yml</code> 里的配置项都将<code>失效</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> icu.xuyijie.secureapi.cipher.CipherAlgorithmEnum;</span><br><span class="line"><span class="keyword">import</span> icu.xuyijie.secureapi.cipher.CipherUtils;</span><br><span class="line"><span class="keyword">import</span> icu.xuyijie.secureapi.cipher.RsaKeyPair;</span><br><span class="line"><span class="keyword">import</span> icu.xuyijie.secureapi.model.SecureApiProperties;</span><br><span class="line"><span class="keyword">import</span> icu.xuyijie.secureapi.model.SecureApiPropertiesConfig;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringBootConfiguration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootConfiguration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecureApiConfig</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这里的配置了Bean会导致yml配置的数据失效</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> SecureApiPropertiesConfig</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SecureApiPropertiesConfig <span class="title function_">secureApiPropertiesConfig</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">SecureApiPropertiesConfig</span> <span class="variable">secureApiPropertiesConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SecureApiPropertiesConfig</span>();</span><br><span class="line">        secureApiPropertiesConfig.setEnabled(<span class="literal">true</span>);</span><br><span class="line">        secureApiPropertiesConfig.setUrlSafe(<span class="literal">true</span>);</span><br><span class="line">        secureApiPropertiesConfig.setShowLog(<span class="literal">true</span>);</span><br><span class="line">        secureApiPropertiesConfig.setMode(SecureApiProperties.Mode.COMMON);</span><br><span class="line">        secureApiPropertiesConfig.setCipherAlgorithmEnum(CipherAlgorithmEnum.RSA_ECB_SHA256);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 密钥可以不设置，组件会自动生成一个，并打印在控制台，如果需要手动生成，只需要使用组件提供的CipherUtils</span></span><br><span class="line">        <span class="type">CipherUtils</span> <span class="variable">cipherUtils</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CipherUtils</span>(CipherAlgorithmEnum.RSA_ECB_SHA256);</span><br><span class="line">        <span class="comment">// 因为我们选择的是非对称加密RSA，所以生成一个密钥对，getRandomRsaKeyPair(&quot;1&quot;)可传入seed参数，在测试时可用于控制每次生成的密钥相同</span></span><br><span class="line">        <span class="type">RsaKeyPair</span> <span class="variable">randomRsaKeyPair</span> <span class="operator">=</span> cipherUtils.getRandomRsaKeyPair();</span><br><span class="line">        <span class="comment">// 把生成的密钥对设置到secureApiPropertiesConfig</span></span><br><span class="line">        secureApiPropertiesConfig.setPublicKey(randomRsaKeyPair.getPublicKey());</span><br><span class="line">        secureApiPropertiesConfig.setPrivateKey(randomRsaKeyPair.getPrivateKey());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 不需要使用url匹配功能可以删除掉下面两行，或者传入空数组</span></span><br><span class="line">        <span class="comment">// secureApiPropertiesConfig.setEncryptUrl(new SecureApiProperties.UrlPattern(Arrays.asList(&quot;/**&quot;), new ArrayList&lt;&gt;()));</span></span><br><span class="line">        <span class="comment">// secureApiPropertiesConfig.setDecryptUrl(new SecureApiProperties.UrlPattern(Arrays.asList(&quot;/**&quot;), Arrays.asList(&quot;/secureApiTest/testForm&quot;)));</span></span><br><span class="line">        <span class="keyword">return</span> secureApiPropertiesConfig;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="试一下"><a href="#试一下" class="headerlink" title="试一下"></a>试一下</h1><blockquote>
+<p>好了各位大佬们，到了这里，配置以及完成，接下来可以进行效果体验了，后面有时间会提供前后端的 demo。</p>
+</blockquote>
+<p>&#x3D;&#x3D;本篇只是先体验功能，请务必和我的代码相同，不然也许你会遇到一些问题，代码里使用的注解等看文档会介绍，可以解决你的疑惑。&#x3D;&#x3D;</p>
+<h2 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h2><blockquote>
+<p>SecureApi的 <code>enable</code> 设置为 <code>true</code> 时，控制台会打印以下信息，代表开启接口加解密功能，我这里没有指定 key ，所以组件为我自动生成了，然后你可以把密钥设置到前端或者和前端进行密钥协商以追求更安全的传输。</p>
+</blockquote>
+<blockquote>
+<p>建议测试的时候使用 <code>CipherUtils</code> 手动设置密钥，可以指定 <code>seed</code> 保证每次生成的密钥相同，更加方便。</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AFDemo%E5%90%AF%E5%8A%A8%E6%89%93%E5%8D%B0%E4%BF%A1%E6%81%AF.png" alt="后端启动打印信息"></p>
+<h2 id="返回值加密"><a href="#返回值加密" class="headerlink" title="返回值加密"></a>返回值加密</h2><blockquote>
+<p>前面我们没有配置url匹配，需要在接口上或者接口所在类上添加 <code>@EncryptApi</code> 注解，即可实现返回值加密</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86%E6%8E%A5%E5%8F%A3.png" alt="返回值加密接口"></p>
+<blockquote>
+<p>可以看到由于我开启了日志打印功能，控制台打印出一些信息</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86.png" alt="返回值加密日志"></p>
+<blockquote>
+<p>接口返回的是一个 json 字符串，然后前端使用对应密钥解密这个字符串（注意这是个json字符串，前端处理时应该去除前后两端引号）就可以拿到 <code>&#123;&quot;code&quot;:200,&quot;message&quot;:&quot;哈哈哈&quot;,&quot;data&quot;:null&#125;</code> 这样的对象了</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC.png" alt="接口返回值密文"></p>
+<hr>
+<h2 id="参数解密"><a href="#参数解密" class="headerlink" title="参数解密"></a>参数解密</h2><h3 id="body-参数解密"><a href="#body-参数解密" class="headerlink" title="body 参数解密"></a>body 参数解密</h3><blockquote>
+<p>组件可以对json参数体进行解密，这次我们传入上一步中加密的返回值，看一看解密结果，接口需要添加 <code>@DecryptApi</code> 注解，这样这个接口既会解密参数，也会加密返回值</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95Body%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E6%8E%A5%E5%8F%A3.png" alt="参数解密接口"></p>
+<blockquote>
+<p>使用 <code>Postman</code> 发送密文body参数</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95Body%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E%E5%80%BC.png" alt="发送body密文"></p>
+<blockquote>
+<p>可以看到密文参数正常解密为 <code>&#123;&quot;code&quot;:200,&quot;message&quot;:&quot;哈哈哈&quot;,&quot;data&quot;:null&#125;</code>,返回值也成功加密了</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E5%90%8E%E7%AB%AF%E6%B5%8B%E8%AF%95Body%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86.png" alt="body解密"></p>
+<h3 id="param和form-data参数解密"><a href="#param和form-data参数解密" class="headerlink" title="param和form-data参数解密"></a>param和form-data参数解密</h3><blockquote>
+<p>这一次我们整复杂一点，各种类型的参数都整上，没有开启url匹配，我们要给字段加上 <code>@DecryptParam</code> 注解，注意 <code>@DecryptParam</code> 不能和 <code>@RequestParam</code> 同时使用，<code>@DecryptParam</code> 已经替代了后者功能。</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E6%B5%8B%E8%AF%95param%E5%92%8Cform-data%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E6%8E%A5%E5%8F%A3.png" alt="param和form-data参数解密接口"></p>
+<blockquote>
+<p>实体类本身不需要加注解，要加在里面的字段上，注意，没有加注解的字段不会解密（配置了url匹配的话，加不加注解全部字段都会解密）</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E6%B5%8B%E8%AF%95param%E5%92%8Cform-data%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%AE%9E%E4%BD%93%E7%B1%BB.png" alt="实体类中字段"></p>
+<blockquote>
+<p>发送请求，请求中这些密文都是我提前用代码生成好的（注意，param里的密文要是url safe的），这些参数放在 param 里或者放在 form-data 里发送都是可以的</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E6%B5%8B%E8%AF%95param%E5%92%8Cform-data%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86postman.png" alt="发送请求"></p>
+<blockquote>
+<p>成功解密加了注解的参数，没有加注解和为null的参数不解密</p>
+</blockquote>
+<p><img src="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/%E6%B5%8B%E8%AF%95param%E5%92%8Cform-data%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E7%BB%93%E6%9E%9C.png" alt="param和form-data参数解密日志"></p>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>&#x3D;&#x3D;本篇只是先体验功能，使用请看官方文档：&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://doc.xuyijie.icu/secure-api-doc/">https://doc.xuyijie.icu/secure-api-doc/</a></p>
+<p>&#x3D;&#x3D;Github地址：&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://github.com/BubblingXuYijie/secure-api-spring-boot">https://github.com/BubblingXuYijie/secure-api-spring-boot</a></p>
+<p>&#x3D;&#x3D;Gitee地址(非主要，issue还是集中在Github比较好，大家都可以看到)&#x3D;&#x3D; <a target="_blank" rel="noopener" href="https://gitee.com/BubblingXuYijie/secure-api-spring-boot">https://gitee.com/BubblingXuYijie/secure-api-spring-boot</a></p>
+<p>一些问题你们会在<code>文档</code>中或者Github的<code>issue</code>里找到答案，如果你不知道前端如何配合，那么<code>文档里有你想要的东西</code></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://bubblingxuyijie.github.io">徐一杰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://bubblingxuyijie.github.io/2024/07/05/spring%20boot%20%E6%8E%A5%E5%8F%A3%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86%E5%92%8C%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86/">https://bubblingxuyijie.github.io/2024/07/05/spring boot 接口参数解密和返回值加密/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://bubblingxuyijie.github.io" target="_blank">泡泡的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86/">数据加密</a></div><div class="post_share"><div class="social-share" data-image="https://qiniuoss.xuyijie.icu/SecureApiDoc/img/logo/logo.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/MyWeChatPay.png" target="_blank"><img class="post-qr-code-img" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/MyWeChatPay.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/MyAliPay.jpg" target="_blank"><img class="post-qr-code-img" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/MyAliPay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/18/Springboot%E4%BD%BF%E7%94%A8logback%E9%85%8D%E7%BD%AE%E5%BD%A9%E8%89%B2%E6%97%A5%E5%BF%97/"><img class="next-cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/彩色日志.png" onerror="onerror=null;src='https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spring boot使用logback配置彩色日志</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/12/24/Vue%E5%92%8CSpringboot%E5%AE%9E%E7%8E%B0SM4%E5%8A%A0%E5%AF%86%E5%92%8C%E8%A7%A3%E5%AF%86%EF%BC%88%E5%89%8D%E7%AB%AF%E5%8F%AF%E5%8A%A0%E5%AF%86%EF%BC%8C%E5%90%8E%E7%AB%AF%E5%8F%AF%E5%8A%A0%E8%A7%A3%E5%AF%86%EF%BC%8CMD5%E5%90%8C%E7%90%86%EF%BC%89/" title="Vue和Springboot实现SM4加密和解密（前、后端均可）"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/springbootLogo.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-24</div><div class="title">Vue和Springboot实现SM4加密和解密（前、后端均可）</div></div></a></div><div><a href="/2022/04/08/EasyExcel%20%E6%A0%B7%E5%BC%8F%E6%B3%A8%E8%A7%A3%E5%A4%A7%E5%85%A8/" title="EasyExcel 样式注解大全"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/EasyexcelLogo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-08</div><div class="title">EasyExcel 样式注解大全</div></div></a></div><div><a href="/2020/06/29/Java%20JDBC%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" title="Java JDBC连接数据库实现增删改查"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/javaLogo.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-29</div><div class="title">Java JDBC连接数据库实现增删改查</div></div></a></div><div><a href="/2021/12/24/Linux%E4%BD%BF%E7%94%A8Docker%E5%AE%89%E8%A3%85Nacos%E5%B9%B6%E9%85%8D%E7%BD%AEMySQL%E6%95%B0%E6%8D%AE%E6%BA%90%EF%BC%8C%E5%B0%86Springboot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%83%A8%E7%BD%B2%E5%88%B0Nacos/" title="Linux使用Docker安装Nacos并配置MySQL数据源，将Springboot的配置文件部署到Nacos"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/NacosLogo.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-24</div><div class="title">Linux使用Docker安装Nacos并配置MySQL数据源，将Springboot的配置文件部署到Nacos</div></div></a></div><div><a href="/2022/01/09/MyBatisPlus%20%E5%BC%80%E5%90%AF%E4%BA%8B%E5%8A%A1%E5%B9%B6%E4%BA%A4%E7%94%B1%20SpringBoot%20%E7%AE%A1%E7%90%86/" title="MyBatisPlus 开启事务并交由 SpringBoot 管理"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/LinuxLogo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-09</div><div class="title">MyBatisPlus 开启事务并交由 SpringBoot 管理</div></div></a></div><div><a href="/2022/10/28/SpringSecurity%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8%EF%BC%88%E5%90%AB%E6%96%B0%20API%20%E6%9B%BF%E6%8D%A2%E8%BF%87%E6%97%B6%E7%9A%84%20WebSecurityConfigurerAdapter%EF%BC%89/" title="SpringSecurity 配置与使用（含新 API 替换过时的 WebSecurityConfigurerAdapter）"><img class="cover" src="https://qiniuoss.xuyijie.icu/XuYijieBlog/BlogImage/springbootLogo.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-28</div><div class="title">SpringSecurity 配置与使用（含新 API 替换过时的 WebSecurityConfigurerAdapter）</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/182382641051648891248098.jpeg" onerror="this.onerror=null;this.src='https://qiniuoss.xuyijie.icu/XuYijieBlog/ThemeImage/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">徐一杰</div><div class="author-info__description">编程技术、代码资源、各类技术、各种工具、影视资源分享</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">71</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">89</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://xuyijie.icu"><i></i><span>泡泡的Infinity</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/BubblingXuYijie" target="_blank" title="GITHUB"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_48922459" target="_blank" title="CSDN"><i class="fa-solid fa-blog"></i></a><a class="social-icon" href="mailto:1119461672@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://t.me/xuyijie" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1119461672&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fa-brands fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">博文和本人的CSDN同步，有问题可以点击右下角图标和我聊天或者评论文章哦。（Blogs is synchronized with my CSDN.If you have any questions, you can click the lower right gear to chat with me or comment on the article.）</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">开发背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#yml-%E6%96%B9%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">yml 方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bean-%E6%96%B9%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">Bean 方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="toc-number">5.</span> <span class="toc-text">试一下</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE"><span class="toc-number">5.1.</span> <span class="toc-text">启动项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E5%8A%A0%E5%AF%86"><span class="toc-number">5.2.</span> <span class="toc-text">返回值加密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86"><span class="toc-number">5.3.</span> <span class="toc-text">参数解密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#body-%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86"><span class="toc-number">5.3.1.</span> <span class="toc-text">body 参数解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#param%E5%92%8Cform-data%E5%8F%82%E6%95%B0%E8%A7%A3%E5%AF%86"><span class="toc-number">5.3.2.</span> <span class="toc-text">param和form-data参数解密</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By 徐一杰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">很开心见到你ヾ(^▽^*)))</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'hkhwUbLes3CPVXrOaA5GWlEC-9Nh9j0Va',
+      appKey: 'yjP1tNi7HQcdN3abvEzimV0Y',
+      avatar: 'monsterid',
+      serverURLs: 'https://leancloud.xuyijie.icu',
+      emojiMaps: {"tv_doge":"6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png","tv_亲亲":"a8111ad55953ef5e3be3327ef94eb4a39d535d06.png","tv_偷笑":"bb690d4107620f1c15cff29509db529a73aee261.png","tv_再见":"180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png","tv_冷漠":"b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png","tv_发怒":"34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png","tv_发财":"34db290afd2963723c6eb3c4560667db7253a21a.png","tv_可爱":"9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png","tv_吐血":"09dd16a7aa59b77baa1155d47484409624470c77.png","tv_呆":"fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png","tv_呕吐":"9f996894a39e282ccf5e66856af49483f81870f3.png","tv_困":"241ee304e44c0af029adceb294399391e4737ef2.png","tv_坏笑":"1f0b87f731a671079842116e0991c91c2c88645a.png","tv_大佬":"093c1e2c490161aca397afc45573c877cdead616.png","tv_大哭":"23269aeb35f99daee28dda129676f6e9ea87934f.png","tv_委屈":"d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png","tv_害羞":"a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png","tv_尴尬":"7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png","tv_微笑":"70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png","tv_思考":"90cf159733e558137ed20aa04d09964436f618a1.png","tv_惊吓":"0d15c7e2ee58e935adc6a7193ee042388adc22af.png"},
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/9rfawxoiu99lc40ynelt5vvxgkhickux.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
